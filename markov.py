@@ -9,7 +9,6 @@ def open_and_read_file(input_path):
     Takes a string that is a file path, opens the file, and turns
     the file's contents as one string of text.
     """
-    whole_text = ""
     with open(input_path) as file:
         open_file = file.read()
 
@@ -45,15 +44,17 @@ def make_chains(open_file):
 
     chains = {}
     # your code goes here
-
+    n = int(raw_input("Key size: "))
     words = open_file.split()
-    for idx in range(len(words) - 2):
 
-        key = (words[idx], words[idx + 1])
-        if key in chains:
-            chains[key].append(words[idx + 2])
+
+    for idx in range(len(words) - n):
+        key = words[idx:idx + n]
+        n_key = tuple(key)
+        if n_key in chains:
+            chains[n_key].append(words[idx + n])
         else:
-            chains[key] = [words[idx + 2]]
+            chains[n_key] = [words[idx + n]]
 
     return chains
 
@@ -61,26 +62,30 @@ def make_chains(open_file):
 def make_text(chains):
     """Return text from chains."""
     words = []
-    key = choice(chains.keys())
-    words.extend(key)
+    random_key = choice(chains.keys())
+    words.extend(random_key)
 
-    while key in chains:
-        new_val = choice(chains[key])
-        key = (key[1], new_val)
+    print random_key
+    while random_key in chains:
+        new_val = choice(chains[random_key])
+        key = (random_key[n], new_val)
         words.append(new_val)
+        print key
+        print new_val
 
     # your code goes here
 
     print " ".join(words)
 
 
-input_path = "gettysburg.txt"
+input_path = "pedra.txt"
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
 chains = make_chains(input_text)
+#print chains
 
 # Produce random text
 random_text = make_text(chains)
